@@ -1,10 +1,10 @@
-import { createStore } from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
-
+import { createStore } from 'vuex';
 import { auth, type BaseAuth } from './modules/auth';
 
 export interface RootState {
   auth: BaseAuth;
+  user: BaseAuth;
   token: string;
 }
 

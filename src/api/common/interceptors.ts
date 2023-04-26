@@ -1,17 +1,17 @@
+import type { AxiosInstance } from 'axios';
 import store from '@/store/index';
-import { AxiosInstance } from 'axios';
 
 export function setInterceptors(instance: AxiosInstance) {
   // Add a request interceptor
   instance.interceptors.request.use(
-    function (config) {
+    config => {
       // Do something before request is sent
-      const token = store.state.token;
+      const token = store.state.auth.token;
       config.headers.Authorization = token;
 
       return config;
     },
-    function (error) {
+    error => {
       // Do something with request error
       return Promise.reject(error);
     }
@@ -19,12 +19,12 @@ export function setInterceptors(instance: AxiosInstance) {
 
   // Add a response interceptor
   instance.interceptors.response.use(
-    function (response) {
+    response => {
       // Any status code that lie within the range of 2xx cause this function to trigger
       // Do something with response data
       return response;
     },
-    function (error) {
+    error => {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
       return Promise.reject(error);

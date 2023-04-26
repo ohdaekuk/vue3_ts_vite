@@ -22,11 +22,33 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { registerUser } from '@/api/auth';
+import { defineComponent, reactive, toRefs } from 'vue';
 
 export default defineComponent({
   setup() {
-    return {};
+    const signupData = reactive({
+      username: '',
+      password: '',
+      nickname: '',
+      logMessage: '',
+    });
+
+    const submitForm = async () => {
+      const userData = {
+        username: signupData.username,
+        password: signupData.password,
+        nickname: signupData.nickname,
+      };
+
+      const { data } = await registerUser(userData);
+
+      signupData.logMessage = `${data.username} 님이 가입되었습니다.`;
+      signupData.username = '';
+      signupData.password = '';
+      signupData.nickname = '';
+    };
+    return { ...toRefs(signupData), submitForm };
   },
 });
 </script>

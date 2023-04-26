@@ -30,11 +30,43 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
+import { validateEmail } from '@/utils/validation';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { ActionType } from '@/store/modules/auth';
 
 export default defineComponent({
   setup() {
-    return {};
+    const store = useStore();
+    const router = useRouter();
+
+    const loginData = reactive({
+      username: '',
+      password: '',
+      logMessage: '',
+    });
+
+    const submitForm = async () => {
+      try {
+        const userData = {
+          username: loginData.username,
+          password: loginData.password,
+        };
+        await store.dispatch('auth/' + ActionType.LOGIN, userData);
+
+        router.push('/main');
+      } catch (error) {
+        console.log(error);
+      }
+      return;
+    };
+
+    const isUsernameValid = computed(() => {
+      return validateEmail(loginData.username);
+    });
+
+    return { ...toRefs(loginData), isUsernameValid, submitForm };
   },
 });
 </script>

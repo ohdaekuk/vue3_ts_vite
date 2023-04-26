@@ -6,9 +6,11 @@
 </template>
 
 <script lang="ts">
+import SignupForm from '@/components/SignupForm.vue';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
+  components: { SignupForm },
   setup() {
     return {};
   },

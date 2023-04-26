@@ -14,7 +14,9 @@
             Contents must be less than 200
           </p>
         </div>
-        <button class="btn" type="submit">Create</button>
+        <button class="btn" type="submit" :disabled="!isContentsValid">
+          Create
+        </button>
       </form>
       <p class="log">
         {{ logMessage }}
@@ -24,13 +26,48 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { createPost } from '@/api/posts';
+import { computed, defineComponent, reactive, toRefs } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   setup() {
-    return {};
+    const router = useRouter();
+    const addData = reactive({
+      title: '',
+      contents: '',
+      logMessage: '',
+    });
+
+    const submitForm = async () => {
+      try {
+        await createPost({
+          title: addData.title,
+          contents: addData.contents,
+        });
+
+        router.push('main');
+      } catch (error) {
+        console.log(error);
+        addData.logMessage = error as string;
+      }
+    };
+
+    const isContentsValid = computed(() => {
+      return addData.contents.length <= 200;
+    });
+
+    return { ...toRefs(addData), isContentsValid, submitForm };
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.form-wrapper .form {
+  width: 100%;
+}
+
+.btn {
+  color: white;
+}
+</style>

@@ -1,5 +1,5 @@
 import { posts } from '@/api/index';
-import { PostsData } from '@/types/apiTypes';
+import { type PostsData } from '@/types/apiTypes';
 
 // 학습 노트 조작과 관련된 CURD API 함수 파일
 

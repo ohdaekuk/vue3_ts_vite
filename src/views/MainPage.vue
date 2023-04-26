@@ -9,7 +9,7 @@
         <PostListItem
           v-for="postItem in postItems"
           :key="postItem._id"
-          :postItem="postItem"
+          :items="postItem"
           @refresh="fetchData"
         >
         </PostListItem>
@@ -22,27 +22,30 @@
 </template>
 
 <script lang="ts">
+import { fetchPosts } from '@/api/posts';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+import PostListItem from '@/components/posts/PostListItem.vue';
 import { defineComponent, reactive, ref, toRefs } from 'vue';
-import { useStore } from 'vuex';
 
 export default defineComponent({
+  components: { LoadingSpinner, PostListItem },
   setup() {
-    const store = useStore();
-
     const isLoading = ref<boolean>(false);
     const state = reactive({
-      postItems: {},
+      postItems: [],
     });
 
     const fetchData = async () => {
       isLoading.value = true;
-      const { data } = await store.dispatch('');
-      state.postItems = data;
+      const { data } = await fetchPosts();
+      state.postItems = data.posts;
       isLoading.value = false;
+
+      // console.log('피카피카', state.postItems);
     };
 
-    // fetchData();
-    return { isLoading, ...toRefs(state) };
+    fetchData();
+    return { isLoading, ...toRefs(state), fetchData };
   },
 });
 </script>
